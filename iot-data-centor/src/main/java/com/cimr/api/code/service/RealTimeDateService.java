@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.cimr.api.code.dao.TerRealDataDao;
 import com.cimr.api.code.service.configs.MessageHandle;
+import com.cimr.api.comm.model.TerimalModel;
 
 @Service
 public class RealTimeDateService {
@@ -59,14 +60,22 @@ public class RealTimeDateService {
 	  }
 	  
 	  
-	  /**
-	   * 查询redis 中的设备实时数据
-	   * @param ids
-	   * @return
-	   */
-	  public List<String> getInfoByTerId(String ids) {
-		  return terRealDataDao.getInfosByTerIds(ids);
-	  }
+//	  /**
+//	   * 查询redis 中的设备实时数据
+//	   * @param ids
+//	   * @return
+//	   */
+//	  public List<String> getInfoByTerId(String ids) {
+//		  return terRealDataDao.getInfosByTerIds(ids);
+//	  }
+
+
+
+
+	public List<String> getInfoByTerId(List<TerimalModel> termimals) {
+		// TODO Auto-generated method stub
+		return terRealDataDao.getInfosByTerIds(termimals);
+	}
 	  
 	
 	  

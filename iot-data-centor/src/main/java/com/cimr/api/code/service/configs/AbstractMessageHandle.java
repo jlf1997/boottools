@@ -3,6 +3,7 @@ package com.cimr.api.code.service.configs;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -119,10 +120,10 @@ public abstract class AbstractMessageHandle implements MessageHandle{
 	}
 	
 	@Override
-	public void getRealData(String telIds) {
-		String[] ters = telIds.split(",");
+	public void getRealData(List<String> telIds) {
+//		String[] ters = telIds.split(",");
 		//设定需要立即去获取实时数据
-		for(String ter : ters) {
+		for(String ter : telIds) {
 			terMaps.put(ter, new Date());
 		}
 		

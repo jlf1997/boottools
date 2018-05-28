@@ -1,6 +1,7 @@
 package com.cimr.api.code.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +19,7 @@ import com.cimr.api.code.model.Message;
 import com.cimr.api.code.service.RealTimeDateService;
 import com.cimr.api.code.service.configs.MessageHandle;
 import com.cimr.api.code.util.MessageUtil;
+import com.cimr.api.comm.model.TerimalModel;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -24,7 +27,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 
-@Api(description="指令相关操作",tags= {"code"})
+@Api(description="指令以及实时数据相关操作",tags= {"real_data","code"})
 @RestController
 @RequestMapping("/code")
 public class SendCodeController {
@@ -121,10 +124,25 @@ public class SendCodeController {
 			)	
 	@RequestMapping(value="/app/ter/realData",method=RequestMethod.GET)
 	public List<String> sendCodeToGetRealData(
-			@RequestParam("telIds") String telIds) {
+			@RequestParam("telIds") List<TerimalModel> termimals) {
+	    List<String> ids = new ArrayList<>();
+	    termimals.forEach(action->{
+	    	ids.add(action.getTerId());
+	    });
+		handle.getRealData(ids);
+		return realTimeDateService.getInfoByTerId(termimals);
+	}
 	
-		handle.getRealData(telIds);
-		return realTimeDateService.getInfoByTerId(telIds);
+	@ApiOperation(value = "获取最新数据"			
+			)	
+	@ApiImplicitParams({ 
+		@ApiImplicitParam(paramType = "body", dataType = "string", name = "termimals", value = "终端列表", required = true) }
+	) 
+	@RequestMapping(value="/app/ter/lastDate",method=RequestMethod.POST)
+	public List<String> sendCodeToGetlastDate(
+			@RequestBody List<TerimalModel> termimals) {
+	
+		return realTimeDateService.getInfoByTerId(termimals);
 	}
 	
 	

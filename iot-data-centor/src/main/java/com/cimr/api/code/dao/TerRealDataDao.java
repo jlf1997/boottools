@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.cimr.api.comm.model.TerimalModel;
+
 
 @Repository
 public class TerRealDataDao {
@@ -17,13 +19,19 @@ public class TerRealDataDao {
 	@Autowired
     private RedisTemplate<String, String> redisTemplate ;
     
-    public List<String> getInfosByTerIds(String ids){
-    	String[] idsStr = ids.split(",");
+	/**
+	 * 
+	 * @param ids
+	 * @return
+	 */
+    public List<String> getInfosByTerIds(List<TerimalModel> ters){
     	List<String> res = new ArrayList<>();
-    	for(String id:idsStr) {
-    		res.add(redisTemplate.opsForValue().get("NEW_DATA_2:"+id));
-    	}
-    	
+    	for(TerimalModel ter:ters) {
+    		String out = redisTemplate.opsForValue().get("NEW_DATA_2:"+ter.getTerId());
+    		if(out!=null) {
+    			res.add(out);
+    		}
+    	}    	
     	return res;
     }
 }

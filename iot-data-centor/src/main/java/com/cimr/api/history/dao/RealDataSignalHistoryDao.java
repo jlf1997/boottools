@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
 
 import com.cimr.api.history.config.HistoryMongoConfig;
 import com.cimr.boot.mongodb.MongoDbBaseFinder;
 
+
+@Repository
 public class RealdataSignalHistoryDao {
 	/**
 	 * 
@@ -30,9 +33,11 @@ public class RealdataSignalHistoryDao {
 	 */
 	public List<Map<String,Object>> findAllByTerId(String singal,String terid){
 		MongoDbBaseFinder finder = new MongoDbBaseFinder(histroyTemp);
-		 Criteria criteria = Criteria.where("_id").regex(terid+"*");
 		Query query = new Query();
-		query.addCriteria(criteria);
+		if(terid!=null || "".equals(terid)) {
+			Criteria criteria = Criteria.where("_id").regex(terid+"*");
+			query.addCriteria(criteria);
+		}
 		return finder.findAll(query,COLLECTION_NAME+singal);
 	}
 	

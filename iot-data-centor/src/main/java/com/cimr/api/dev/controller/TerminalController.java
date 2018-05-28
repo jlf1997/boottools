@@ -1,14 +1,18 @@
 package com.cimr.api.dev.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cimr.api.code.service.RealTimeDateService;
+import com.cimr.api.comm.model.TerimalModel;
 import com.cimr.api.dev.model.Terminal;
 import com.cimr.api.dev.service.TerminalService;
 
@@ -31,6 +35,7 @@ public class TerminalController {
 	
 	@Autowired
 	private TerminalService terminalService;
+	
 
 	@ApiOperation(value = "根据id查询单台设备信息", notes = ""			
 			)	  
@@ -51,8 +56,15 @@ public class TerminalController {
 	
 	@ApiOperation(value = "根据id串查询设备信息", notes = "传入参数为id字符串，id之间使用','分格"			
 			)	  
-	@RequestMapping(value="/infos/ids",method=RequestMethod.GET)	
-	public List<Terminal> findDevInfoByIds(@RequestParam(name="ids") String ids) {
+	@RequestMapping(value="/infos/ids",method=RequestMethod.POST)	
+	public List<Terminal> findDevInfoByIds(	
+			@RequestBody List<TerimalModel> termimals
+//			@RequestParam String ids
+			) {
+		List<String> ids = new ArrayList<>();
+		termimals.forEach(action->{
+			ids.add(action.getTerId());
+		});
 		return terminalService.findDevsByIds(ids);
 	}
 	
@@ -82,6 +94,11 @@ public class TerminalController {
 		List<Terminal> res = terminalService.findAll(t);
 		return res;
 	}
+	
+
+	
+	
+	
 	
 	
 	

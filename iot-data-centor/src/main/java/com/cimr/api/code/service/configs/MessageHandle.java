@@ -1,5 +1,7 @@
 package com.cimr.api.code.service.configs;
 
+import java.util.List;
+
 public interface MessageHandle {
 	
 	
@@ -20,7 +22,7 @@ public interface MessageHandle {
 	/**
 	 * 获取实时数据
 	 */
-	public void getRealData(String telIds);
+	public void getRealData(List<String> telIds);
 	
 	
 

@@ -3,6 +3,7 @@ package com.cimr.api.history.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cimr.api.history.dao.RealdataSignalHistoryDao;
@@ -11,6 +12,7 @@ import com.cimr.api.history.dao.RealdataSignalHistoryDao;
 public class RealDataSignalHistoryService {
 
 
+	@Autowired
 	protected RealdataSignalHistoryDao realdataSignalHistoryDao;
 	
 	/**

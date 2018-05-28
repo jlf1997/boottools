@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
 
+import com.cimr.api.comm.model.TerimalModel;
 import com.cimr.api.dev.jpa.TerminalJpa;
 import com.cimr.api.dev.model.Terminal;
 import com.cimr.boot.jpafinder.DefindSelect;
@@ -56,7 +57,7 @@ public class TerminalService extends Finder<Terminal,Long>{
 	 * @param ids
 	 * @return
 	 */
-	public List<Terminal> findDevsByIds(String ids){
+	public List<Terminal> findDevsByIds(List<String>  ids){
 		
 		List<Terminal> devs = terminalJpa.findAll(getDefinedSpecification(new DefindSelect<Terminal>() {
 
@@ -64,14 +65,17 @@ public class TerminalService extends Finder<Terminal,Long>{
 			public void find(Root<Terminal> root, CriteriaQuery<?> query, CriteriaBuilder cb, List<Predicate> predicates,
 					SpringDateJpaOper<Terminal> sdjo, Terminal... t) {
 				// TODO Auto-generated method stub
-				String[] idStr = ids.split(",");
+//				String[] idStr = ids.split(",");
 				List<Predicate> predicateList = new ArrayList<>();
-				for(String id:idStr)  {
-					predicateList.add(sdjo.eq( "id", id));
+				for(String id:ids)  {
+					if(id!=null) {
+						predicateList.add(sdjo.eq( "terminalId", id));
+					}
+					
 					
 				}
 				
-				Predicate p = cb.or(predicates.toArray(new Predicate[predicateList.size()]));
+				Predicate p = cb.or(predicateList.toArray(new Predicate[predicateList.size()]));
 				predicates.add(p);
 			}
 
