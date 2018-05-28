@@ -10,7 +10,7 @@ public class MessageConfig {
 	@Bean
 	@ConditionalOnMissingBean
 	public MessageHandle getMessageHandle() {
-		return new MessageHandleWithRedis();
+		return new MessageHandleWihtConcurrentHashMap();
 	}
 	
  

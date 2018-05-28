@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Api(description="历史记录相关查询",tags= {"history"})
 @RestController
-@RequestMapping("/history")
+@RequestMapping("/history/realdata")
 public class HistoryController {
   
 	@Autowired
@@ -36,6 +36,16 @@ public class HistoryController {
 			@RequestParam String terid) {
 		List<Map<String,Object>> list = histroyService.findAllByTerId(singal, terid);
 		return list;
+	}
+	
+	@ApiOperation(value = "根据时间点查询获取终端的历史数据", notes = ""			
+			)
+	public List<Map<String,Object>> findTersRealDataByTime(@RequestParam String singal,
+			@RequestParam String terid
+			) {
+		
+		
+		return null;
 	}
 
 }
