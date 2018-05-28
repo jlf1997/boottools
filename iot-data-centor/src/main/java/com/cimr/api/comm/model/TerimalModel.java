@@ -14,6 +14,8 @@ public class TerimalModel implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	
 	@ApiModelProperty(value = "terId")
 	private String terId;
 

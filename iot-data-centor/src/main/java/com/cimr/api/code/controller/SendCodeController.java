@@ -1,7 +1,9 @@
+
 package com.cimr.api.code.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -27,7 +29,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 
-@Api(description="指令以及实时数据相关操作",tags= {"real_data","code"})
+@Api(description="指令据相关操作",tags= {"code"})
 @RestController
 @RequestMapping("/code")
 public class SendCodeController {
@@ -120,10 +122,10 @@ public class SendCodeController {
 	
 	
 	
-	@ApiOperation(value = "获取实时数据"			
+	@ApiOperation(value = "发送指令 获取实时数据"			
 			)	
 	@RequestMapping(value="/app/ter/realData",method=RequestMethod.GET)
-	public List<String> sendCodeToGetRealData(
+	public List<HashMap> sendCodeToGetRealData(
 			@RequestParam("telIds") List<TerimalModel> termimals) {
 	    List<String> ids = new ArrayList<>();
 	    termimals.forEach(action->{
@@ -133,17 +135,7 @@ public class SendCodeController {
 		return realTimeDateService.getInfoByTerId(termimals);
 	}
 	
-	@ApiOperation(value = "获取最新数据"			
-			)	
-	@ApiImplicitParams({ 
-		@ApiImplicitParam(paramType = "body", dataType = "string", name = "termimals", value = "终端列表", required = true) }
-	) 
-	@RequestMapping(value="/app/ter/lastDate",method=RequestMethod.POST)
-	public List<String> sendCodeToGetlastDate(
-			@RequestBody List<TerimalModel> termimals) {
 	
-		return realTimeDateService.getInfoByTerId(termimals);
-	}
 	
 	
 	

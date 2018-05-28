@@ -1,17 +1,24 @@
 package com.cimr.boot.redis;
 
+import java.util.HashMap;
+
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.hash.HashMapper;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
+import com.cimr.boot.redis.utils.MyHashMapper;
 
 @Configuration
 @EnableAutoConfiguration  
@@ -30,10 +37,11 @@ public class RedisTemplateConfig {
 	 * @return
 	 */
 
+		
 	 public <String, V> RedisTemplate<String, V> getJacksonStringTemplate(Class<V> clazz) {
 	        RedisTemplate<String, V> redisTemplate = new RedisTemplate<String, V>();
 	        redisTemplate.setConnectionFactory(factory);
-	        redisTemplate.setKeySerializer(new StringRedisSerializer());
+	        redisTemplate.setKeySerializer(new StringRedisSerializer());	       
 	        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<V>(clazz));
 	        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
 	        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
@@ -49,7 +57,7 @@ public class RedisTemplateConfig {
 	 * @param clazz
 	 * @return
 	 */
-	
+
 	 public <String, V> RedisTemplate<String, V> getFastJsonStringTemplate(Class<V> clazz) {
 	        RedisTemplate<String, V> redisTemplate = new RedisTemplate<String, V>();
 	        redisTemplate.setConnectionFactory(factory);
@@ -62,5 +70,23 @@ public class RedisTemplateConfig {
 
 	        return redisTemplate;
 	  }
+	 
+	 @Bean
+	 public RedisTemplate getDefaultRedisTemplate() {
+		
+		 RedisTemplate<String, HashMap> redisTemplate ;
+		 redisTemplate =
+				 getFastJsonStringTemplate(HashMap.class);
+		 return redisTemplate;
+	 }
+	 
+	 @Bean
+	 public HashMapper getDefaultMapper() {
+		   HashMapper<HashMap, String, String> mapper =
+		    		MyHashMapper.getInstance(HashMap.class, String.class, String.class);
+		   return mapper;
+	 }
+	 
+	 
 
 }

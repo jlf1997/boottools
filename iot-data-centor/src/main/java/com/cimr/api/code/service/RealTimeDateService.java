@@ -1,5 +1,6 @@
 package com.cimr.api.code.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -11,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.cimr.api.code.dao.TerRealDataDao;
+import com.cimr.api.code.model.Terminal_1_Info;
 import com.cimr.api.code.service.configs.MessageHandle;
 import com.cimr.api.comm.model.TerimalModel;
 
@@ -71,10 +73,28 @@ public class RealTimeDateService {
 
 
 
-
-	public List<String> getInfoByTerId(List<TerimalModel> termimals) {
+	 /**
+	  * 根据终端id获取终端最新数据
+	  * 数据来源:redis 第二组
+	  * @param termimals
+	  * @return
+	  */
+	public List<HashMap> getInfoByTerId(List<TerimalModel> termimals) {
 		// TODO Auto-generated method stub
 		return terRealDataDao.getInfosByTerIds(termimals);
+	}
+
+
+
+
+	/**
+	 * 根据终端id获取终端最新位置数据
+	 * @param termimals
+	 * @return
+	 */
+	public List<Terminal_1_Info> getLocationInfoByTerId(List<TerimalModel> termimals) {
+		// TODO Auto-generated method stub
+		return terRealDataDao.getLocationInfosByTerIds(termimals);
 	}
 	  
 	

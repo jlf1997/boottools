@@ -54,7 +54,7 @@ public class TerminalController {
 	
 	
 	
-	@ApiOperation(value = "根据id串查询设备信息", notes = "传入参数为id字符串，id之间使用','分格"			
+	@ApiOperation(value = "根据id串查询设备信息", notes = ""			
 			)	  
 	@RequestMapping(value="/infos/ids",method=RequestMethod.POST)	
 	public List<Terminal> findDevInfoByIds(	
