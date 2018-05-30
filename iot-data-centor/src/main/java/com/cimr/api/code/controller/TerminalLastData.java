@@ -17,9 +17,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-@Api(description="实时数据相关操作",tags= {"lastdata"})
+@Api(description="实时数据相关操作",tags= {"latestData"})
 @RestController
-@RequestMapping("/lastdata")
+@RequestMapping("/latest_data")
 public class TerminalLastData {
 
 	@Autowired
@@ -27,8 +27,7 @@ public class TerminalLastData {
 	
 	@ApiOperation(value = "获取最新数据"			
 			)	
-	
-	@RequestMapping(value="/app/ter/lastDate",method=RequestMethod.POST)
+	@RequestMapping(value="/app/ter/info",method=RequestMethod.POST)
 	public List<HashMap> getlastDate(
 			@RequestBody List<TerimalModel> termimals) {
 	
@@ -36,7 +35,7 @@ public class TerminalLastData {
 	}
 	
 	
-	@ApiOperation(value = "获取最新数据"			
+	@ApiOperation(value = "获取最新位置数据"			
 			)	
 	
 	@RequestMapping(value="/app/ter/location",method=RequestMethod.POST)

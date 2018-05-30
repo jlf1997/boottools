@@ -1,10 +1,13 @@
 package com.cimr.api.history.dao;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -20,6 +23,8 @@ public class RealdataSignalHistoryDao {
 	 * 
 	 */
 	private final String COLLECTION_NAME = "REALDATA_SIGNAL_";
+	
+	private final String COLLECTION_NAME_LOCATION = "LocationTest";
 	
 	@Autowired
 	@Qualifier(HistoryMongoConfig.MONGO_TEMPLATE)
@@ -65,5 +70,23 @@ public class RealdataSignalHistoryDao {
 	public List<Map<String,Object>> findAllBySingal(String singal){
 		MongoDbBaseFinder finder = new MongoDbBaseFinder(histroyTemp);		
 		return finder.findAll(COLLECTION_NAME+singal);
+	}
+	
+	
+	/**
+	 * 
+	 * @param terminalId
+	 * @param beg
+	 * @param end
+	 * @return
+	 */
+	public List<Map<String,Object>> findLocationByTerminalId(String terminalId,Long beg,Long end){
+		MongoDbBaseFinder finder = new MongoDbBaseFinder(histroyTemp);	
+		Query query = new Query();
+		Criteria criteria = Criteria.where("gatherMsgTime").gte(beg).lte(end);
+		query.addCriteria(criteria);
+		//按照时间排序
+		query.with(new Sort(Sort.Direction.ASC, "gatherMsgTime"));
+		return finder.findAll(query,COLLECTION_NAME_LOCATION);
 	}
 }

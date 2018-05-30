@@ -101,7 +101,7 @@ public class SendCodeController {
 	}
 	
 	
-	@ApiOperation(value = "应用设置终端解除调试", notes = "cmdContents与telIds均以逗号隔开"			
+	@ApiOperation(value = "应用设置终端解除调试", notes = ""			
 			)	
 	@RequestMapping(value="/app/ter/endDebug",method=RequestMethod.GET)
 	public String sendEndDebug(
