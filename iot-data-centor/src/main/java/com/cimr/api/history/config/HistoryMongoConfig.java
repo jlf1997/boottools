@@ -13,11 +13,18 @@ import com.cimr.boot.mongodb.config.DefaultMongoConfig;
         mongoTemplateRef = HistoryMongoConfig.MONGO_TEMPLATE)
 public class HistoryMongoConfig extends DefaultMongoConfig{
 	
+	
 	public static final String MONGO_TEMPLATE = "history";
 	
 	
 	
   
+	/**
+	 * 用于mongodb历史记录查询
+	 * 使用第一个配置的数据源，编号为0
+	 * @return
+	 * @throws Exception
+	 */
 	@Primary
     @Bean(name = HistoryMongoConfig.MONGO_TEMPLATE)
     public MongoTemplate primaryMongoTemplate() throws Exception {

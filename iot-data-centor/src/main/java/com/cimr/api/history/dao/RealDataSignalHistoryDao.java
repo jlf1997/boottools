@@ -1,6 +1,7 @@
 package com.cimr.api.history.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cimr.api.history.config.HistoryMongoConfig;
 import com.cimr.boot.mongodb.MongoDbBaseFinder;
+import com.cimr.util.MapResultUtils;
 
 
 @Repository
@@ -88,5 +91,50 @@ public class RealdataSignalHistoryDao {
 		//按照时间排序
 		query.with(new Sort(Sort.Direction.ASC, "gatherMsgTime"));
 		return finder.findAll(query,COLLECTION_NAME_LOCATION);
+	}
+
+	public List<Map<String, Object>> findAllDataByTimeAndSingal(String singal, String terid, Long beg, Long end,String[] sortBy,String sortType,int type,String... fields) {
+		MongoDbBaseFinder finder = new MongoDbBaseFinder(histroyTemp);	
+		Query query = new Query();
+		Criteria criteriaTime =null;
+		if(terid!=null || "".equals(terid)) {
+			Criteria criteria = Criteria.where("_id").regex(terid+"*");
+			query.addCriteria(criteria);
+		}
+		
+//		criteriaTime = Criteria.where("_id").regex("^"+terid+"_"+);
+		//时间查询
+		if(beg==null || beg<0) {
+			beg = 0L;
+		}
+		
+		criteriaTime = Criteria.where("gatherMsgTime").gte(new Date(beg));
+		if(end!=null && end>0) {
+			criteriaTime.lte(new Date(end));
+		}	
+		if(criteriaTime!=null) {
+			query.addCriteria(criteriaTime);
+		}
+		
+		//按照时间排序
+		if(sortBy!=null && sortBy.length>0) {
+			Direction direction = null;
+			if("DESC".equals(sortType)) {
+				direction = Sort.Direction.DESC;
+			}else {
+				direction = Sort.Direction.ASC;
+			}
+			query.with(new Sort(direction, sortBy));
+		}
+		
+		List<Map<String, Object>> res = finder.findAll(query,COLLECTION_NAME+singal);
+		List<Map<String, Object>> out = new ArrayList<>();
+		res.forEach(action->{
+			out.add(MapResultUtils.getList(action, fields, type));
+		});
+		
+		return out;
+		
+		
 	}
 }

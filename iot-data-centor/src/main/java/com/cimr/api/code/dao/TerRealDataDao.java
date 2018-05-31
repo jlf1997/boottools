@@ -2,20 +2,18 @@ package com.cimr.api.code.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.hash.HashMapper;
 import org.springframework.stereotype.Repository;
 
+import com.cimr.api.code.config.CodeProperties;
 import com.cimr.api.code.model.Terminal_1_Info;
 import com.cimr.api.comm.model.TerimalModel;
-import com.cimr.boot.redis.RedisTemplateConfig;
-import com.cimr.boot.redis.utils.MyHashMapper;
+import com.cimr.util.MapResultUtils;
 
 
 @Repository
@@ -23,54 +21,79 @@ public class TerRealDataDao {
 	
 	
 	
-	
+	/**
+	 * redis 查询工具
+	 */
+	@SuppressWarnings("rawtypes")
 	@Autowired
-    private RedisTemplate<String, HashMap> redisTemplate ;
+    private RedisTemplate<String, Map<String,Object>> redisTemplate ;
 	
-	@Autowired
-    private HashMapper mapper;
-    
-	 
 	
+	
+//	/**
+//	 * 根据终端编号查询终端信息
+//	 * @param termimals 终端编号列表
+//	 * @return 终端信息列表
+//	 */
+//    @SuppressWarnings("rawtypes")
+//	public List<HashMap> getInfosByTerIds(List<TerimalModel> termimals,String signal){
+//    	List<HashMap> res = new ArrayList<>();
+//    	for(TerimalModel ter:termimals) {
+//    		HashMap out = redisTemplate.opsForValue().get(CodeProperties.NEW_DATA+signal+":"+ter.getTerId());
+//    		if(out!=null) {
+//    			res.add(out);
+//    		}
+//    	}    	
+//    	return res;
+//    }
+//
+//    
+//    /**
+//     * 
+//     * 根据终端编号查询终端位置信息
+//     * @param termimals 终端编号列表
+//     * @return 终端位置信息列表
+//     */
+//    @SuppressWarnings("rawtypes")
+//	public List<Terminal_1_Info> getLocationInfosByTerIds(List<TerimalModel> termimals,String signal) {
+//		// TODO Auto-generated method stub
+//		List<HashMap> res = new ArrayList<>();
+//    	for(TerimalModel ter:termimals) {
+//    		HashMap out = redisTemplate.opsForValue().get(CodeProperties.NEW_DATA+signal+":"+ter.getTerId());
+//    		if(out!=null) {
+//    			res.add(out);
+//    		}
+//    	}    	
+//    	List<Terminal_1_Info> infos = new ArrayList<>();
+//    	res.forEach(action->{
+//    		infos.add(new Terminal_1_Info(action));
+//    	});
+//    	return infos;
+//	}
+
+
 	/**
 	 * 
-	 * @param ids
+	 * @param termimals
+	 * @param signal
+	 * @param fields
 	 * @return
 	 */
-    public List<HashMap> getInfosByTerIds(List<TerimalModel> ters){
-    	List<HashMap> res = new ArrayList<>();
-    	for(TerimalModel ter:ters) {
-    		HashMap out = redisTemplate.opsForValue().get("NEW_DATA_2:"+ter.getTerId());
-    		if(out!=null) {
-    			res.add(out);
-    		}
-    	}    	
-    	return res;
-    }
-
-    
-    /**
-     * 
-     * @param termimals
-     * @return
-     */
-	public List<Terminal_1_Info> getLocationInfosByTerIds(List<TerimalModel> termimals) {
+	public List<Map<String,Object>> getDate(List<TerimalModel> termimals, String signal,int type, String... fields) {
 		// TODO Auto-generated method stub
-		List<HashMap> res = new ArrayList<>();
+		List<Map<String,Object>> res = new ArrayList<>();
     	for(TerimalModel ter:termimals) {
-    		
-    		
-    		HashMap out = redisTemplate.opsForValue().get("NEW_DATA_1:"+ter.getTerId());
+    		Map<String,Object> out = redisTemplate.opsForValue().get(CodeProperties.NEW_DATA+signal+":"+ter.getTerId());
+    		out = MapResultUtils.getList(out, fields, type);
     		if(out!=null) {
     			res.add(out);
     		}
     	}    	
-    	List<Terminal_1_Info> infos = new ArrayList<>();
-    	res.forEach(action->{
-    		infos.add(new Terminal_1_Info(action));
-    	});
-    	return infos;
+    	
+    	return res;
 	}
+	
+	
 	
 	
 }

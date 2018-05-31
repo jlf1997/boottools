@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
 
 
 /**
- * 
+ * 设备相关操作
  * @author Administrator
  *
  */
@@ -59,7 +59,6 @@ public class TerminalController {
 	@RequestMapping(value="/infos/ids",method=RequestMethod.POST)	
 	public List<Terminal> findDevInfoByIds(	
 			@RequestBody List<TerimalModel> termimals
-//			@RequestParam String ids
 			) {
 		List<String> ids = new ArrayList<>();
 		termimals.forEach(action->{

@@ -2,7 +2,7 @@
 <!DOCTYPE logback>
 <configuration>
 	<property name="LOG_HOME" value="logs" />
-	<property name="APP_NAME" value="order"></property>
+	<property name="APP_NAME" value="iot-data-center"></property>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

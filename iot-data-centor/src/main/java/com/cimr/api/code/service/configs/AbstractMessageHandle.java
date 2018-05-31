@@ -1,6 +1,7 @@
 package com.cimr.api.code.service.configs;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import com.cimr.api.code.config.CodeProperties;
 import com.cimr.api.code.model.Message;
 import com.cimr.api.code.util.MessageUtil;
 import com.cimr.api.websocket.WebSocketInterImple;
@@ -35,13 +37,18 @@ public abstract class AbstractMessageHandle implements MessageHandle{
 	@Autowired
     private SimpMessagingTemplate messagingTemplate;
 	
+	@Autowired
+	private CodeProperties codeProperties;
+	
+	
+	
 	/**
 	 * 获取最新的过期时间
 	 * @return
 	 */
 	protected Date getDeadLine() {
 		Long now = new Date().getTime();
-		Long time = 5*60*1000L;
+		Long time = codeProperties.getSubscribeTimeMill();
 		return new Date(now+time);
 	}
 	
@@ -50,13 +57,13 @@ public abstract class AbstractMessageHandle implements MessageHandle{
 	 * 发送kafka消息 获取数据
 	 * @param telIds
 	 */
-	protected void sendRealDataMessage(String telIds) {
+	protected void sendRealDataMessage(List<String> telIds) {
 		Message message = null;
 		try {
 			message = MessageUtil.getMessage(90,4,null, null, null, telIds);
 			String messageJson=message.toJson();
 			log.debug("message:"+messageJson);
-			kafkaTemplate.send("SYS_MANAGE_CENTER",messageJson);
+			kafkaTemplate.send(codeProperties.getTopicAppToTer(),messageJson);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -72,18 +79,18 @@ public abstract class AbstractMessageHandle implements MessageHandle{
 	
 	@Scheduled(fixedRate = 1000)
 	protected void scheduleGetData() {
-		StringBuilder telIds = null;
+		List<String> telIds = null;
 		//判断是否需要重新订阅消息
 		Iterator<String> iterator = terMaps.keySet().iterator();
 		while(iterator.hasNext()) {
-			 telIds = new StringBuilder();
+			telIds =  new ArrayList<>();
 			String terId = iterator.next();
 			Date time = terMaps.get(terId);
 			//判断终端是否依然连接			
 			if(isOnConnect(terId)) {
 				//判断是否过期
 				if(new Date().after(time)) {
-					telIds.append(terId+",");
+					telIds.add(terId);
 					terMaps.put(terId, getDeadLine());
 				}
 			}else {
@@ -91,11 +98,9 @@ public abstract class AbstractMessageHandle implements MessageHandle{
 				log.debug(terId+"移除");
 				terMaps.remove(terId);
 			}
-			
 		}
-		
-		if(telIds!=null && !"".equals(telIds.toString()) ) {
-			sendRealDataMessage(telIds.toString());
+		if(telIds!=null && telIds.size()>0 )  {
+			sendRealDataMessage(telIds);
 		}
 	
 		
@@ -121,7 +126,6 @@ public abstract class AbstractMessageHandle implements MessageHandle{
 	
 	@Override
 	public void getRealData(List<String> telIds) {
-//		String[] ters = telIds.split(",");
 		//设定需要立即去获取实时数据
 		for(String ter : telIds) {
 			terMaps.put(ter, new Date());

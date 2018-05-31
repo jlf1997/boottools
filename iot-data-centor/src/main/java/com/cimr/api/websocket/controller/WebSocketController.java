@@ -3,9 +3,6 @@ package com.cimr.api.websocket.controller;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.cimr.api.code.service.RealTimeDateService;
-import com.cimr.api.demo.SocketMessage;
-import com.cimr.api.websocket.WebSocketInterImple;
-import com.cimr.api.websocket.model.SessionObject;
+import com.cimr.api.websocket.model.SocketMessage;
 
 import io.swagger.annotations.Api;
 
@@ -36,15 +30,15 @@ public class WebSocketController {
 	 @Autowired
 	    private SimpMessagingTemplate messagingTemplate;
 	 
-//	    @GetMapping("/test")
-//	    public String test() {
-//	        return "test";
-//	    }
+	    @GetMapping("/test")
+	    public String test() {
+	        return "test";
+	    }
 
-//	    @GetMapping("/")
-//	    public String index() {
-//	        return "index";
-//	    }
+	    @GetMapping("/")
+	    public String index() {
+	        return "index";
+	    }
 
 	    @MessageMapping("/send")
 	    @SendTo("/topic/send")

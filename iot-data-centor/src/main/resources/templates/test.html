@@ -14,7 +14,7 @@
   
     var connect = function() {
     	var terid = $("#terid").val();
-         var socket = new SockJS('http://192.168.1.109:8003/my-websocket');
+         var socket = new SockJS('/my-websocket');
          stompClient = Stomp.over(socket);
          stompClient.connect({"terid":terid}, function(frame) {
          

@@ -35,67 +35,141 @@ public class HistoryRealDataController {
 	 * @param terid
 	 * @return
 	 */
-	@ApiOperation(value = "根据信号id 获取终端编号查询对应历史数据", notes = "terid 传输为all时 表示查询所有终端"			
+	@ApiOperation(value = "根据信号id 查询对应终端的所有历史数据", notes = "terid 传输为all时 表示查询所有终端"			
 			)	  
 	@ApiImplicitParams({ 
 		@ApiImplicitParam(paramType = "path", dataType = "String", name = "singal", value = "信号", required = true),
-		@ApiImplicitParam(paramType = "path", dataType = "String", name = "terid", value = "终端id", required = true)
+		@ApiImplicitParam(paramType = "path", dataType = "String", name = "terid", value = "终端id", required = true),
+		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "beg", value = "开始时间", required = false),
+		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "end", value = "结束时间", required = false),
+		@ApiImplicitParam(paramType = "query", allowMultiple = true,dataType = "string", name = "sortBy", value = "排序字段", required = false),
+		@ApiImplicitParam(paramType = "query", dataType = "string", name = "sortType", value = "排序字段", required = false,allowableValues="ASC,DESC")
 		}) 
-	@RequestMapping(value= {"/{singal}/{terid}"},method=RequestMethod.GET)
-	public List<Map<String,Object>> findTersRealDataById(@PathVariable("singal") String singal,
-			@PathVariable(value="terid",required=true) String terid) {
-		List<Map<String,Object>> list = histroyService.findAllByTerId(singal, terid);
+	@RequestMapping(value= "/app/{terid}/{singal}/all",method=RequestMethod.GET)
+	public List<Map<String,Object>> findTersAllRealData(
+			@PathVariable("singal") String singal,
+			@PathVariable(value="terid",required=true) String terid,
+			@RequestParam(name="beg",required=false) Long beg,
+			@RequestParam(name="end",required=false) Long end,
+			@RequestParam(name="sortBy",required=false) String[] sortBy,
+			@RequestParam(name="sortType",required=false) String sortType
+			) {
+		List<Map<String,Object>> list = histroyService.findTersAllRealData(singal, terid,beg,end,sortBy,sortType);
 		return list;
 	}
 	
-	
-	
 	/**
-	 * 根据时间段查询获取终端的历史数据
+	 * 根据信号id 获取终端编号查询对应历史数据
+	 * 只查询给定的字段
 	 * @param singal
-	 * @param beg
-	 * @param end
+	 * @param terid
 	 * @return
 	 */
-	@ApiOperation(value = "根据时间段查询获取终端的历史数据", notes = ""			
-			)
+	@ApiOperation(value = "根据信号id 查询对应终端的所有历史数据", notes = "terid 传输为all时 表示查询所有终端"			
+			)	  
 	@ApiImplicitParams({ 
 		@ApiImplicitParam(paramType = "path", dataType = "String", name = "singal", value = "信号", required = true),
-		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "beg", value = "开始时间", required = true),
-		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "end", value = "结束时间", required = true)
+		@ApiImplicitParam(paramType = "path", dataType = "String", name = "terid", value = "终端id", required = true),
+		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "beg", value = "开始时间", required = false),
+		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "end", value = "结束时间", required = false),
+		@ApiImplicitParam(paramType = "query", allowMultiple = true,dataType = "string", name = "sortBy", value = "排序字段", required = false),
+		@ApiImplicitParam(paramType = "query", dataType = "string", name = "sortType", value = "排序类型", required = false,allowableValues="ASC,DESC"),
+		@ApiImplicitParam(paramType = "query", allowMultiple = true,dataType = "string", name = "fields", value = "查询的字段", required = false)
 		}) 
-	@RequestMapping(value="/{singal}/time",method=RequestMethod.GET)
-	public List<Map<String,Object>> findTersRealDataByTime(@PathVariable("singal") String singal,
-			@RequestParam Long beg,
-			@RequestParam Long end
+	@RequestMapping(value= "/app/{terid}/{singal}/include",method=RequestMethod.GET)
+	public List<Map<String,Object>> findTersRealDataIncludeFields(
+			@PathVariable("singal") String singal,
+			@PathVariable(value="terid",required=true) String terid,
+			@RequestParam(name="beg",required=false) Long beg,
+			@RequestParam(name="end",required=false) Long end,
+			@RequestParam(name="sortBy",required=false) String[] sortBy,
+			@RequestParam(name="sortType",required=false) String sortType,
+			@RequestParam(name="fields",required=false) String[] fields
 			) {
-		List<Map<String,Object>> list = histroyService.findAllByTime(singal, beg, end);
+		List<Map<String,Object>> list = histroyService.findTersAllRealDataInclude(singal, terid, beg, end, sortBy, sortType, fields);
 		return list;
 	}
-	
 	
 	/**
-	 * 根据时间段查询获取终端的历史数据
+	 * 根据信号id 获取终端编号查询对应历史数据
+	 * 只查询给定的字段
 	 * @param singal
-	 * @param beg
-	 * @param end
+	 * @param terid
 	 * @return
 	 */
-	@ApiOperation(value = "根据时间段查询获取终端终端位置信息的历史数据", notes = ""			
-			)
+	@ApiOperation(value = "根据信号id 查询对应终端的所有历史数据", notes = "terid 传输为all时 表示查询所有终端"			
+			)	  
 	@ApiImplicitParams({ 
-		@ApiImplicitParam(paramType = "path", dataType = "String", name = "terminalId", value = "终端编号", required = true),
-		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "beg", value = "开始时间", required = true),
-		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "end", value = "结束时间", required = true)
-		}) 
-	@RequestMapping(value="/location/{terminalId}/time",method=RequestMethod.GET)
-	public List<Terminal_1_Info_History> findTersRealDataLocationByTime(
-			@PathVariable("terminalId") String terminalId,
-			@RequestParam Long beg,
-			@RequestParam Long end
-			) {
-		List<Terminal_1_Info_History> list = histroyService.findAllLocationByTime(terminalId, beg, end);
+		@ApiImplicitParam(paramType = "path", dataType = "String", name = "singal", value = "信号", required = true),
+		@ApiImplicitParam(paramType = "path", dataType = "String", name = "terid", value = "终端id", required = true),
+		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "beg", value = "开始时间", required = false),
+		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "end", value = "结束时间", required = false),
+		@ApiImplicitParam(paramType = "query", allowMultiple = true,dataType = "string", name = "sortBy", value = "排序字段", required = false),
+		@ApiImplicitParam(paramType = "query", dataType = "string", name = "sortType", value = "排序类型", required = false,allowableValues="ASC,DESC"),
+		@ApiImplicitParam(paramType = "query", allowMultiple = true,dataType = "string", name = "fields", value = "排除的字段", required = false)
+	})  
+	@RequestMapping(value= "/app/{terid}/{singal}/exclude",method=RequestMethod.GET)
+	public List<Map<String,Object>> findTersRealDataExcludeFields(
+			@PathVariable("singal") String singal,
+			@PathVariable(value="terid",required=true) String terid,
+			@RequestParam(name="beg",required=false) Long beg,
+			@RequestParam(name="end",required=false) Long end,
+			@RequestParam(name="sortBy",required=false) String[] sortBy,
+			@RequestParam(name="sortType",required=false) String sortType,
+			@RequestParam(name="fields",required=false) String[] fields
+		){
+		List<Map<String,Object>> list = histroyService.findTersAllRealDataExculde(singal, terid, beg, end, sortBy, sortType, fields);
 		return list;
 	}
+	
+	
+	
+//	/**
+//	 * 根据时间段查询获取终端的历史数据
+//	 * @param singal
+//	 * @param beg
+//	 * @param end
+//	 * @return
+//	 */
+//	@ApiOperation(value = "根据信号id 时间段 查询所有终端的历史数据", notes = ""			
+//			)
+//	@ApiImplicitParams({ 
+//		@ApiImplicitParam(paramType = "path", dataType = "String", name = "singal", value = "信号", required = true),
+//		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "beg", value = "开始时间", required = true),
+//		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "end", value = "结束时间", required = true)
+//		}) 
+//	@RequestMapping(value="/app/time/{singal}",method=RequestMethod.GET)
+//	public List<Map<String,Object>> findTersRealDataByTime(@PathVariable("singal") String singal,
+//			@RequestParam Long beg,
+//			@RequestParam Long end
+//			) {
+//		List<Map<String,Object>> list = histroyService.findAllByTime(singal, beg, end);
+//		return list;
+//	}
+//	
+//	
+//	/**
+//	 * 根据时间段查询获取终端的历史数据
+//	 * @param singal
+//	 * @param beg
+//	 * @param end
+//	 * @return
+//	 */
+//	@ApiOperation(value = "根据时间段查询获取终端终端位置信息的历史数据", notes = ""			
+//			)
+//	@ApiImplicitParams({ 
+//		@ApiImplicitParam(paramType = "path", dataType = "String", name = "terminalId", value = "终端编号", required = true),
+//		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "beg", value = "开始时间", required = true),
+//		@ApiImplicitParam(paramType = "query", dataType = "Long", name = "end", value = "结束时间", required = true)
+//		}) 
+//	@RequestMapping(value="/location/{terminalId}/time",method=RequestMethod.GET)
+//	public List<Terminal_1_Info_History> findTersRealDataLocationByTime(
+//			@PathVariable("terminalId") String terminalId,
+//			@RequestParam Long beg,
+//			@RequestParam Long end
+//			) {
+//		List<Terminal_1_Info_History> list = histroyService.findAllLocationByTime(terminalId, beg, end);
+//		return list;
+//	}
 
 }

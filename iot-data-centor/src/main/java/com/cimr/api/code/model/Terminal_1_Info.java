@@ -15,12 +15,11 @@ import io.swagger.annotations.ApiModelProperty;
  * @author Administrator
  *
  */
+@SuppressWarnings("rawtypes")
 @ApiModel(value = "Terminal_1_Info", description = "信号组1终端查询对象")
 public class Terminal_1_Info extends TerimalModel{
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -45,17 +44,24 @@ public class Terminal_1_Info extends TerimalModel{
 		this.lat = lat;
 	}
 	
-	public Terminal_1_Info(String json) {
-		HashMap map = JSON.parseObject(json, HashMap.class);
-//		JSONObject jo = JSON.parseObject(json);
-//		this.lat = jo.getString("lat");
-		this.lng = map.get("lng").toString();
+	public Terminal_1_Info() {
+		
 	}
 	
-	public Terminal_1_Info(Map json) {
-		this.setTerId(json.get("terminalNo").toString());
-		this.lat = json.get("lat").toString();
-		this.lng = json.get("lng").toString();
+	
+	public Terminal_1_Info(Map map) {
+		this.setLocation(map);
+		this.setTerId(map);
+	}
+	
+	public void setLocation(Map map) {
+		
+		this.lat = map.get("Z_LAT").toString();
+		this.lng = map.get("Z_LNG").toString();
+	}
+	
+	public void setTerId(Map map) {
+		this.setTerId(map.get("terminalNo").toString());
 	}
 	
 	
